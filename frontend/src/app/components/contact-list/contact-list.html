@@ -1,0 +1,59 @@
+<section class="contact-list" aria-label="Lista de contactos">
+  <div class="contact-list__toolbar">
+    <div>
+      <h2 class="contact-list__title">Tus contactos</h2>
+      <p class="contact-list__count">{{ contacts().length }} contactos</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="onCreate()">+ Nuevo contacto</button>
+  </div>
+
+  @if (loading()) {
+    <div class="contact-list__state" role="status">
+      <span class="spinner" aria-hidden="true"></span>
+      <p>Cargando contactos...</p>
+    </div>
+  } @else if (contacts().length === 0) {
+    <div class="contact-list__state">
+      <p class="state-icon" aria-hidden="true">&#128241;</p>
+      <p class="state-title">Aun no tienes contactos</p>
+      <p class="state-text">Crea tu primer contacto con el boton "Nuevo contacto".</p>
+    </div>
+  } @else {
+    <div class="contact-list__grid">
+      @for (contact of contacts(); track contact.id) {
+        <article class="contact-card">
+          <div class="contact-card__avatar" aria-hidden="true">
+            {{ contact.nombre.charAt(0).toUpperCase() }}{{ contact.apellido.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="contact-card__body">
+            <h3 class="contact-card__name">{{ contact.nombre }} {{ contact.apellido }}</h3>
+            <p class="contact-card__email">{{ contact.email }}</p>
+            <p class="contact-card__phones" [class.has-none]="contact.telefonos.length === 0">
+              {{ phoneList(contact) || 'Sin telefonos registrados' }}
+            </p>
+          </div>
+
+          <div class="contact-card__actions">
+            <button
+              type="button"
+              class="btn btn-outline"
+              (click)="onEdit(contact)"
+              [attr.aria-label]="'Editar ' + contact.nombre + ' ' + contact.apellido"
+            >
+              Editar
+            </button>
+            <button
+              type="button"
+              class="btn btn-ghost btn-danger"
+              (click)="onDelete(contact)"
+              [attr.aria-label]="'Eliminar ' + contact.nombre + ' ' + contact.apellido"
+            >
+              Eliminar
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

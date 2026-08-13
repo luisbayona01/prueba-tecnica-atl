@@ -1,0 +1,19 @@
+# Entorno
+.env
+
+# Dependencias
+/vendor/
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# Base de datos local
+*.sqlite

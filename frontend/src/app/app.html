@@ -1,0 +1,39 @@
+<header class="app-header">
+  <div class="app-header__inner app-container">
+    <div class="brand">
+      <span class="brand__logo" aria-hidden="true">&#128241;</span>
+      <div>
+        <h1 class="brand__title">Mis Contactos</h1>
+        <p class="brand__subtitle">Prueba tecnica · Angular + API PHP</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+@if (notice(); as n) {
+  <div class="notice" [class.notice--error]="n.type === 'error'" role="status">
+    <span class="notice__text">{{ n.text }}</span>
+    <button class="notice__close" (click)="dismissNotice()" aria-label="Cerrar aviso">×</button>
+  </div>
+}
+
+<main class="app-main">
+  <div class="app-container">
+    @if (showForm) {
+      <app-contact-form
+        [contact]="editingContact"
+        (saved)="onSaved($event)"
+        (cancelled)="onCancelled()"
+      ></app-contact-form>
+    } @else {
+      <app-contact-list
+        (newContact)="onNewContact()"
+        (editContact)="onEditContact($event)"
+      ></app-contact-list>
+    }
+  </div>
+</main>
+
+<footer class="app-footer">
+  <p>Hecho con Angular y una API REST en PHP nativo.</p>
+</footer>

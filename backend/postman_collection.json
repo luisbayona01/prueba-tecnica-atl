@@ -1,0 +1,123 @@
+{
+  "info": {
+    "_postman_id": "e7c2f1a0-9b3d-4f5e-8a6b-2c1d0e9f8a7b",
+    "name": "Prueba Tecnica - API Contactos",
+    "description": "Coleccion de endpoints de la API REST de contactos (PHP nativo + MySQL).\n\nBase URL: http://localhost:8080",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Contactos",
+      "item": [
+        {
+          "name": "Crear contacto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/contactos", "host": ["{{baseUrl}}"], "path": ["api", "contactos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Luis\",\n    \"apellido\": \"Bayona\",\n    \"email\": \"luis.bayona@example.com\",\n    \"telefonos\": [\n        \"3001234567\",\n        \"3109876543\"\n    ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar contactos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos", "host": ["{{baseUrl}}"], "path": ["api", "contactos"] }
+          }
+        },
+        {
+          "name": "Obtener contacto por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos/1", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "1"] }
+          }
+        },
+        {
+          "name": "Eliminar contacto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos/1", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "1"] }
+          }
+        },
+        {
+          "name": "Datos invalidos (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/contactos", "host": ["{{baseUrl}}"], "path": ["api", "contactos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"A\",\n    \"apellido\": \"\",\n    \"email\": \"correo-invalido\",\n    \"telefonos\": []\n}"
+            }
+          }
+        },
+        {
+          "name": "Email duplicado (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/contactos", "host": ["{{baseUrl}}"], "path": ["api", "contactos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Luis\",\n    \"apellido\": \"Bayona\",\n    \"email\": \"luis@example.com\",\n    \"telefonos\": [\"3001234567\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Contacto inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos/9999", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "9999"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Telefonos",
+      "item": [
+        {
+          "name": "Agregar telefono a contacto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/contactos/2/telefonos", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "2", "telefonos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"numero\": \"3205550099\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar telefono",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos/2/telefonos/3", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "2", "telefonos", "3"] }
+          }
+        },
+        {
+          "name": "Contacto con multiples telefonos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/contactos/3", "host": ["{{baseUrl}}"], "path": ["api", "contactos", "3"] }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<div class="phone-field">
+  @for (phone of telefonos.controls; track phone; let i = $index) {
+    @let error = phoneError(i);
+
+    <div class="phone-row" [class.has-error]="error !== ''">
+      <div class="phone-input-wrap">
+        <input
+          type="tel"
+          inputmode="numeric"
+          class="form-control phone-input"
+          placeholder="3001234567"
+          [attr.id]="'telefono-' + i"
+          [attr.aria-label]="'Telefono ' + (i + 1)"
+          [formControl]="phone"
+        />
+        @if (error !== '') {
+          <p class="error-text">{{ error }}</p>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-ghost btn-remove"
+        (click)="removePhone(i)"
+        [attr.aria-label]="'Eliminar telefono ' + (i + 1)"
+      >
+        Eliminar
+      </button>
+    </div>
+  }
+
+  @if (telefonos.controls.length === 0) {
+    <p class="hint-text">Sin telefonos. Agrega al menos uno.</p>
+  }
+
+  <button
+    type="button"
+    class="btn btn-outline btn-add"
+    (click)="addPhone()"
+    [disabled]="telefonos.controls.length >= maxPhones"
+  >
+    + Agregar telefono
+  </button>
+</div>

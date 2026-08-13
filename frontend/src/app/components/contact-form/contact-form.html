@@ -1,0 +1,66 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="contact-form" novalidate>
+  <div class="contact-form__header">
+    <h2 class="contact-form__title">{{ title }}</h2>
+    <p class="contact-form__subtitle">
+      {{ isEditing ? 'Modifica los datos y guarda los cambios.' : 'Completa los datos del nuevo contacto.' }}
+    </p>
+  </div>
+
+  <div class="form-field">
+    <label for="nombre">Nombre</label>
+    <input
+      type="text"
+      id="nombre"
+      class="form-control"
+      [class.has-error]="errorFor('nombre') !== ''"
+      placeholder="Luis"
+      formControlName="nombre"
+    />
+    @if (errorFor('nombre') !== '') {
+      <p class="error-text">{{ errorFor('nombre') }}</p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="apellido">Apellido</label>
+    <input
+      type="text"
+      id="apellido"
+      class="form-control"
+      [class.has-error]="errorFor('apellido') !== ''"
+      placeholder="Bayona"
+      formControlName="apellido"
+    />
+    @if (errorFor('apellido') !== '') {
+      <p class="error-text">{{ errorFor('apellido') }}</p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      class="form-control"
+      [class.has-error]="errorFor('email') !== ''"
+      placeholder="luis@example.com"
+      formControlName="email"
+    />
+    @if (errorFor('email') !== '') {
+      <p class="error-text">{{ errorFor('email') }}</p>
+    }
+  </div>
+
+  <div class="form-field">
+    <span class="form-label">Telefonos</span>
+    <app-phone-list [telefonos]="telefonos"></app-phone-list>
+    @if (atLeastOnePhoneError()) {
+      <p class="error-text">Debe ingresar al menos un telefono.</p>
+    }
+  </div>
+
+  <div class="contact-form__actions">
+    <button type="submit" class="btn btn-primary">Guardar contacto</button>
+    <button type="button" class="btn btn-ghost" (click)="onCancel()">Cancelar</button>
+  </div>
+</form>

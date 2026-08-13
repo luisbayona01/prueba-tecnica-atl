@@ -1,0 +1,9 @@
+# Enruta todas las peticiones al front controller.
+RewriteEngine On
+
+# Si el archivo o directorio existe, se sirve directo.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Todo lo demas va a index.php.
+RewriteRule ^ index.php [QSA,L]

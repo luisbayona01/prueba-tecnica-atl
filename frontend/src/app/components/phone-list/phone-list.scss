@@ -1,0 +1,41 @@
+.phone-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phone-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.phone-input-wrap {
+  flex: 1;
+}
+
+.phone-input {
+  min-width: 0;
+}
+
+.btn-remove {
+  flex: none;
+  margin-top: 1px;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+}
+
+.btn-add {
+  align-self: flex-start;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 480px) {
+  .phone-row {
+    flex-direction: column;
+  }
+
+  .btn-remove {
+    width: 100%;
+  }
+}
