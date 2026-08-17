@@ -1,0 +1,572 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Contactos",
+        "description": "API REST para la gestion de **contactos y telefonos**. Lista, consulta, crea y elimina contactos, y gestiona telefonos anidados. Las respuestas usan el formato JSON `{ success, message, data }`.",
+        "contact": {
+            "email": "dev@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/api/contactos": {
+            "get": {
+                "tags": [
+                    "Contactos"
+                ],
+                "summary": "Listar contactos",
+                "description": "Obtiene todos los contactos con sus telefonos.",
+                "operationId": "listarContactos",
+                "responses": {
+                    "200": {
+                        "description": "Contactos obtenidos correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContactListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Contactos"
+                ],
+                "summary": "Crear un contacto",
+                "description": "Crea un contacto junto con al menos un telefono.",
+                "operationId": "crearContacto",
+                "requestBody": {
+                    "description": "Datos del contacto a crear.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContactInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Contacto creado correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContactResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Cuerpo de la peticion no es JSON valido.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos invalidos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "El email ya esta registrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contactos/{id}": {
+            "get": {
+                "tags": [
+                    "Contactos"
+                ],
+                "summary": "Obtener un contacto",
+                "description": "Obtiene un contacto por su ID junto con sus telefonos.",
+                "operationId": "obtenerContacto",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identificador del contacto.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contacto obtenido correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContactResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contacto no encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Contactos"
+                ],
+                "summary": "Eliminar un contacto",
+                "description": "Elimina un contacto y sus telefonos asociados.",
+                "operationId": "eliminarContacto",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identificador del contacto.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contacto eliminado correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyDataResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contacto no encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contactos/{id}/telefonos": {
+            "post": {
+                "tags": [
+                    "Telefonos"
+                ],
+                "summary": "Agregar un telefono a un contacto",
+                "description": "Agrega un nuevo telefono a un contacto existente.",
+                "operationId": "agregarTelefono",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identificador del contacto.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Datos del telefono a agregar.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PhoneInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Telefono agregado correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PhoneResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Cuerpo de la peticion no es JSON valido.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contacto no encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos invalidos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contactos/{id}/telefonos/{telefonoId}": {
+            "delete": {
+                "tags": [
+                    "Telefonos"
+                ],
+                "summary": "Eliminar un telefono de un contacto",
+                "description": "Elimina un telefono especifico de un contacto.",
+                "operationId": "eliminarTelefono",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identificador del contacto.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "telefonoId",
+                        "in": "path",
+                        "description": "Identificador del telefono.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Telefono eliminado correctamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyDataResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contacto o telefono no encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorResponse": {
+                "description": "Respuesta de error generica de la API.",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Definiciones globales de la documentacion OpenAPI.\n\nLos atributos de las operaciones viven en los controladores\n(App\\Controllers) y los esquemas de datos en los modelos.\n\nLa clase solo ancla los atributos globales (Info, Server, Tags y\nesquemas de respuesta); debe ser autoloadable para que el generador\nlos reconozca.",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Contacto no encontrado."
+                    },
+                    "errors": {
+                        "description": "Errores por campo (opcional).",
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ContactListResponse": {
+                "description": "Listado de contactos.",
+                "required": [
+                    "success",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Contactos obtenidos correctamente."
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Contact"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ContactResponse": {
+                "description": "Un contacto con sus telefonos.",
+                "required": [
+                    "success",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Contacto obtenido correctamente."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Contact"
+                    }
+                },
+                "type": "object"
+            },
+            "PhoneResponse": {
+                "description": "Un telefono.",
+                "required": [
+                    "success",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Telefono agregado correctamente."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Phone"
+                    }
+                },
+                "type": "object"
+            },
+            "EmptyDataResponse": {
+                "description": "Respuesta sin datos (operaciones de borrado).",
+                "required": [
+                    "success",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Contacto eliminado correctamente."
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {},
+                        "example": []
+                    }
+                },
+                "type": "object"
+            },
+            "Contact": {
+                "description": "Contacto con sus telefonos.",
+                "required": [
+                    "id",
+                    "nombre",
+                    "apellido",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador unico del contacto.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Juan"
+                    },
+                    "apellido": {
+                        "type": "string",
+                        "example": "Perez"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan.perez@example.com"
+                    },
+                    "telefonos": {
+                        "description": "Telefonos asociados al contacto.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Phone"
+                        }
+                    },
+                    "created_at": {
+                        "description": "Fecha de creacion.",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de ultima actualizacion.",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ContactInput": {
+                "description": "Datos para crear un contacto.",
+                "required": [
+                    "nombre",
+                    "apellido",
+                    "email",
+                    "telefonos"
+                ],
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "example": "Juan",
+                        "maxLength": 100,
+                        "minLength": 2
+                    },
+                    "apellido": {
+                        "type": "string",
+                        "example": "Perez",
+                        "maxLength": 100,
+                        "minLength": 2
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan.perez@example.com",
+                        "maxLength": 190
+                    },
+                    "telefonos": {
+                        "description": "Al menos un telefono es obligatorio.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PhoneInput"
+                        },
+                        "minItems": 1
+                    }
+                },
+                "type": "object"
+            },
+            "Phone": {
+                "description": "Telefono asociado a un contacto.",
+                "required": [
+                    "id",
+                    "numero"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador unico del telefono.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "numero": {
+                        "type": "string",
+                        "example": "+57 300 123 4567"
+                    }
+                },
+                "type": "object"
+            },
+            "PhoneInput": {
+                "description": "Datos para agregar un telefono.",
+                "required": [
+                    "numero"
+                ],
+                "properties": {
+                    "numero": {
+                        "description": "Digitos y los simbolos +, -, espacios o parentesis.",
+                        "type": "string",
+                        "example": "+57 300 123 4567",
+                        "maxLength": 20,
+                        "minLength": 7
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Contactos",
+            "description": "Gestion de contactos"
+        },
+        {
+            "name": "Telefonos",
+            "description": "Telefonos anidados bajo un contacto"
+        }
+    ]
+}

@@ -13,6 +13,7 @@ contacto puede tener **uno o varios telefonos**.
 
 - **Backend** (`backend/`): API REST con PHP nativo + MySQL + PDO.
   Persistencia real en base de datos con la relacion `contactos 1 a N telefonos`.
+  Incluye **documentacion interactiva (Swagger UI)** generada con swagger-php.
 - **Frontend** (`frontend/`): SPA en Angular 21 (standalone components).
   Carga los datos iniciales desde `contacts.json`, persiste en LocalStorage y
   queda lista para cambiar su origen de datos a la API PHP.
@@ -29,11 +30,12 @@ prueba-tecnica/
 │   ├── services/           logica de negocio y transacciones
 │   ├── validators/         reglas de validacion
 │   ├── repositories/       acceso a datos (SQL + PDO)
-│   ├── models/             entidades Contact y Phone
+│   ├── models/             entidades Contact y Phone (+ esquemas OpenAPI)
+│   ├── docs/               OpenApiSpec.php (Info, Tags, esquemas de respuesta)
 │   ├── utils/              Response, Input, ApiException
 │   ├── database/           database.sql
 │   ├── postman_collection.json
-│   ├── composer.json       autoloading PSR-4
+│   ├── composer.json       autoloading PSR-4 (+ swagger-php como dev)
 │   └── .env / .env.example
 │
 ├── frontend/               SPA Angular 21
@@ -173,6 +175,22 @@ npm start
 
 > Los telefonos se guardan en la tabla `telefonos` (relacion 1-N), nunca separados por comas.
 
+### Documentacion interactiva (Swagger UI)
+
+La API incluye una interfaz **Swagger UI** que documenta y permite probar los
+endpoints desde el navegador:
+
+- Local: `http://localhost:8080/swagger.html`
+- Docker: `http://localhost:8089/swagger.html`
+
+El spec OpenAPI (`backend/public/openapi.json`) se genera a partir de atributos
+PHP con swagger-php (`zircote/swagger-php`, dependencia de desarrollo) y se
+regenera con:
+
+```bash
+cd backend && composer docs:generate
+```
+
 ## 10. Postman
 
 Importa `backend/postman_collection.json`. Incluye ejemplos de: crear, listar,
@@ -224,7 +242,9 @@ Se carga con **HttpClient** (nunca se importa directamente en un componente).
 - **PHP nativo sin frameworks** por requisito de la prueba; la arquitectura por
   capas replica las buenas practicas de cualquier framework (routing propio).
 - **PDO con `EMULATE_PREPARES=false`** para sentencias preparadas nativas y seguras.
-- **Composer solo para autoloading PSR-4**, sin dependencias de terceros.
+- **Composer solo para autoloading PSR-4**, sin dependencias de terceros en
+  produccion; `zircote/swagger-php` es la unica dependencia de **desarrollo**
+  (genera el spec OpenAPI).
 - **Angular 21 standalone** (version recomendada para el entorno Node 22 actual).
 - **Señales reactivas** en lugar de NgRx: estado simple, tipado y sin dependencias.
 - **`ContactService` como unico punto de datos**: permite migrar de `contacts.json`
@@ -245,6 +265,7 @@ docker compose up -d --build
 | Servicio | Acceso |
 | -------- | ------ |
 | API | http://localhost:8089/api/... |
+| Swagger UI | http://localhost:8089/swagger.html |
 | Frontend | http://localhost:4400 |
 | MySQL | localhost:3307 (usuario `contactos`, clave `contactos123`) |
 | phpMyAdmin | http://localhost:8081 (usuario `contactos`, clave `contactos123`) |

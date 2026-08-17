@@ -14,6 +14,9 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader
 
 # Codigo de la aplicacion.
+# Nota: el spec OpenAPI (public/openapi.json) es un artefacto que se
+# genera en desarrollo con `composer docs:generate` y se commitea, para
+# no incluir las dependencias de desarrollo (swagger-php) en la imagen.
 COPY . .
 
 # Env local (sin secretos). Los valores reales llegan por variables de entorno

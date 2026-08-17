@@ -4,9 +4,47 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use OpenApi\Attributes as OA;
+
 /**
  * Entidad Contacto.
  */
+#[OA\Schema(
+    schema: 'Contact',
+    description: 'Contacto con sus telefonos.',
+    required: ['id', 'nombre', 'apellido', 'email'],
+    properties: [
+        new OA\Property(property: 'id', description: 'Identificador unico del contacto.', type: 'integer', example: 1),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Juan'),
+        new OA\Property(property: 'apellido', type: 'string', example: 'Perez'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'juan.perez@example.com'),
+        new OA\Property(
+            property: 'telefonos',
+            description: 'Telefonos asociados al contacto.',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/Phone')
+        ),
+        new OA\Property(property: 'created_at', description: 'Fecha de creacion.', type: 'string', format: 'date-time'),
+        new OA\Property(property: 'updated_at', description: 'Fecha de ultima actualizacion.', type: 'string', format: 'date-time'),
+    ],
+)]
+#[OA\Schema(
+    schema: 'ContactInput',
+    description: 'Datos para crear un contacto.',
+    required: ['nombre', 'apellido', 'email', 'telefonos'],
+    properties: [
+        new OA\Property(property: 'nombre', type: 'string', minLength: 2, maxLength: 100, example: 'Juan'),
+        new OA\Property(property: 'apellido', type: 'string', minLength: 2, maxLength: 100, example: 'Perez'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', maxLength: 190, example: 'juan.perez@example.com'),
+        new OA\Property(
+            property: 'telefonos',
+            description: 'Al menos un telefono es obligatorio.',
+            type: 'array',
+            minItems: 1,
+            items: new OA\Items(ref: '#/components/schemas/PhoneInput')
+        ),
+    ],
+)]
 final class Contact
 {
     public function __construct(

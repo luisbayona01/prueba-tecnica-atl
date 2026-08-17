@@ -104,6 +104,35 @@ Respuesta `201`:
 
 Los telefonos se guardan en la tabla `telefonos` (relacion 1-N), nunca separados por comas.
 
+## Documentacion (Swagger / OpenAPI)
+
+La API esta documentada con [swagger-php](https://zircote.github.io/swagger-php/) usando **atributos PHP**:
+
+- `docs/OpenApiSpec.php` — Info, Servers, Tags y esquemas de respuesta.
+- `controllers/` — operaciones por endpoint (`@OA\Get`, `@OA\Post`, `@OA\Delete`).
+- `models/` — esquemas de datos (`@OA\Schema`).
+
+Para **regenerar** el spec `public/openapi.json` tras modificar los atributos:
+
+```bash
+cd backend
+composer docs:generate
+```
+
+> El spec generado es un artefacto que **se commitea**; así el contenedor Docker
+> (que instala solo dependencias de producción con `composer install --no-dev`)
+> no necesita swagger-php en la imagen.
+
+### Swagger UI
+
+Abre en el navegador:
+
+- Local: `http://localhost:8080/swagger.html`
+- Docker: `http://localhost:8089/swagger.html`
+
+La UI carga el spec desde `openapi.json` (mismo origen) y permite probar los
+endpoints directamente desde el navegador.
+
 ## Postman
 
 Importa `postman_collection.json` en Postman. La coleccion incluye ejemplos para: crear, listar, obtener, eliminar, datos invalidos (422), email duplicado (409), contacto inexistente (404) y multiples telefonos. Ajusta la variable `baseUrl` si el puerto es otro.
