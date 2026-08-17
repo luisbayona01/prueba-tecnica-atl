@@ -296,6 +296,7 @@ La prueba tambien esta desplegada y en ejecucion. Si queres verla en vivo:
 | Servicio | URL |
 | -------- | --- |
 | API (produccion) | https://apirestpruebatecnica.devsoftai.com/api/ |
+| Swagger UI | https://apirestpruebatecnica.devsoftai.com/swagger.html |
 | Frontend | https://frontpruebatecnica.devsoftai.com/ |
 | phpMyAdmin (acceso a la base de datos) | https://prubdonline.devsoftai.com/ |
 
